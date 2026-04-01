@@ -40,7 +40,7 @@ print("\n Conversion en Pandas OK")
 # CELLULE 3 — Exploration : infos générales
 
 print("=" * 50)
-print("📋 INFORMATIONS GÉNÉRALES")
+print(" INFORMATIONS GÉNÉRALES")
 print("=" * 50)
 print(df.info())
 
