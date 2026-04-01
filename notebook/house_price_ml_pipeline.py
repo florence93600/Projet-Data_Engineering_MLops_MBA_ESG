@@ -89,10 +89,10 @@ plt.tight_layout()
 plt.savefig('price_distribution.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-print(f"\n📈 Prix min    : {df['PRICE'].min():,}")
-print(f"📈 Prix max    : {df['PRICE'].max():,}")
-print(f"📈 Prix moyen  : {df['PRICE'].mean():,.0f}")
-print(f"📈 Prix médian : {df['PRICE'].median():,.0f}")
+print(f"\n Prix min    : {df['PRICE'].min():,}")
+print(f" Prix max    : {df['PRICE'].max():,}")
+print(f" Prix moyen  : {df['PRICE'].mean():,.0f}")
+print(f" Prix médian : {df['PRICE'].median():,.0f}")
 
 
 # CELLULE 5 — EDA : Corrélations
