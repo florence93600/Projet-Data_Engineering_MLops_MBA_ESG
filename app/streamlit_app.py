@@ -24,7 +24,7 @@ def load_model():
     session = get_session()
     reg = Registry(
         session=session,
-        database_name="HOUSE_PRICE_DB",
+        database_name="HOUSES_PRICES_DB",
         schema_name="ML_SCHEMA"
     )
     return reg.get_model("HOUSE_PRICE_PREDICTOR").version("V1")
@@ -123,7 +123,7 @@ st.divider()
 st.subheader(" Historique des inférences")
 
 try:
-    history = session.table("HOUSE_PRICE_DB.ML_SCHEMA.INFERENCE_RESULTS").to_pandas()
+    history = session.table("HOUSES_PRICES_DB.ML_SCHEMA.INFERENCE_RESULTS").to_pandas()
     st.dataframe(
         history[['AREA','BEDROOMS','BATHROOMS','AIRCONDITIONING',
                  'PREFAREA','PREDICTED_PRICE']].head(20),
