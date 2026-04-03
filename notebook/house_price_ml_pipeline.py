@@ -501,7 +501,7 @@ models = reg.show_models()
 print(models)
 
 # Charger le modèle depuis le registry
-loaded_mv = reg.get_model("HOUSE_PRICE_PREDICTOR").version("V1")
+loaded_mv = reg.get_model("HOUSE_PRICE_PREDICTOR").version(model_version.version_name)
 print(f"\n Modèle rechargé depuis le registry")
 print(f"   Métriques : {loaded_mv.show_metrics()}")
 
@@ -527,7 +527,7 @@ new_houses = pd.DataFrame({
 })
 
 # Prédiction
-predictions = BEST_MODEL.predict(new_houses)
+predictions = loaded_mv.run(new_houses, function_name="predict")
 new_houses['PREDICTED_PRICE'] = predictions.astype(int)
 
 print(" Prédictions pour 10 nouvelles maisons :")
