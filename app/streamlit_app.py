@@ -1,4 +1,5 @@
 
+
 # STREAMLIT IN SNOWFLAKE — Application de prédiction de prix
 # Déployer dans : Snowflake > Streamlit > + Streamlit App
 
@@ -140,4 +141,3 @@ st.markdown(
     "MBAESG — Workshop Snowflake Data Engineering & ML</div>",
     unsafe_allow_html=True
 )
-
