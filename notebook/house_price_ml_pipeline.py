@@ -2,7 +2,6 @@
 
 # CELLULE 1 — Imports & Connexion
 
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,7 +25,7 @@ print("=" * 50)
 # CELLULE 2 — Chargement des données depuis Snowflake
 
 # Chargement de la table en DataFrame Snowpark
-df_snow = session.table("HOUSE_PRICES")
+df_snow = session.table("HOUSES_PRICES")
 
 print(f" Nombre de lignes  : {df_snow.count()}")
 print(f" Nombre de colonnes: {len(df_snow.columns)}")
@@ -63,9 +62,7 @@ cat_cols = ['MAINROAD','GUESTROOM','BASEMENT','HOTWATERHEATING',
 for col in cat_cols:
     print(f"  {col}: {df[col].unique()}")
 
-
 # CELLULE 4 — EDA : Distribution du prix (variable cible)
-
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 fig.suptitle("Distribution du Prix de Vente", fontsize=16, fontweight='bold')
@@ -94,9 +91,7 @@ print(f" Prix max    : {df['PRICE'].max():,}")
 print(f" Prix moyen  : {df['PRICE'].mean():,.0f}")
 print(f" Prix médian : {df['PRICE'].median():,.0f}")
 
-
 # CELLULE 5 — EDA : Corrélations
-
 
 # Corrélation sur les variables numériques
 num_cols = ['PRICE', 'AREA', 'BEDROOMS', 'BATHROOMS', 'STORIES', 'PARKING']
@@ -125,7 +120,6 @@ plt.tight_layout()
 plt.savefig('correlations.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-
 # CELLULE 6 — EDA : Variables catégorielles vs Prix
 
 fig, axes = plt.subplots(2, 4, figsize=(20, 10))
@@ -146,7 +140,6 @@ axes[-1].set_visible(False)
 plt.tight_layout()
 plt.savefig('categorical_analysis.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 # CELLULE 7 — Feature Engineering
 
@@ -241,6 +234,7 @@ results.append(evaluate_model("XGBoost", xgb,
 
 print("\n Entraînement terminé !")
 
+
 # CELLULE 9 — Comparaison visuelle des modèles
 
 fig, axes = plt.subplots(1, 3, figsize=(18, 5))
@@ -285,7 +279,6 @@ plt.show()
 best_base = min(results, key=lambda x: x['rmse'])
 print(f"\n Meilleur modèle de base : {best_base['name']} (RMSE={best_base['rmse']:,.0f}, R²={best_base['r2']:.4f})")
 
-
 # CELLULE 10 — Prédictions vs Réalité (meilleur modèle de base)
 
 best_result = min(results, key=lambda x: x['rmse'])
@@ -318,29 +311,29 @@ plt.show()
 
 # CELLULE 11 — Optimisation Hyperparamètres (GridSearch)
 
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 
-print("  Optimisation par GridSearch — Random Forest")
-print("   (peut prendre 1-2 minutes...)\n")
+print("Optimisation par RandomizedSearch — Random Forest")
+print("(peut prendre 1-2 minutes...)\n")
 
-# Grille de paramètres RF
+# Grille réduite
 param_grid_rf = {
-    'n_estimators'    : [50, 100, 200],
-    'max_depth'       : [None, 10, 20],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4]
+    'n_estimators'     : [50, 100],
+    'max_depth'        : [None, 10],
+    'min_samples_split': [2, 5],
+    'min_samples_leaf' : [1, 2]
 }
 
-rf_base = RandomForestRegressor(random_state=42, n_jobs=-1)
+rf_base = RandomForestRegressor(random_state=42, n_jobs=1)  # ← n_jobs=1
 
 grid_search_rf = RandomizedSearchCV(
     rf_base,
     param_distributions=param_grid_rf,
-    n_iter=20,            # 20 combinaisons aléatoires (plus rapide que GridSearch)
-    cv=5,                 # 5-fold cross-validation
+    n_iter=10,        # ← réduit de 20 à 10
+    cv=3,             # ← réduit de 5 à 3
     scoring='neg_root_mean_squared_error',
     random_state=42,
-    n_jobs=-1,
+    n_jobs=1,         # ← n_jobs=1 (pas de parallélisme)
     verbose=1
 )
 
@@ -348,28 +341,31 @@ grid_search_rf.fit(X_train, y_train)
 
 best_rf = grid_search_rf.best_estimator_
 y_pred_rf_opt = best_rf.predict(X_test)
-rmse_rf_opt   = np.sqrt(mean_squared_error(y_test, y_pred_rf_opt))
-mae_rf_opt    = mean_absolute_error(y_test, y_pred_rf_opt)
-r2_rf_opt     = r2_score(y_test, y_pred_rf_opt)
+rmse_rf_opt = np.sqrt(mean_squared_error(y_test, y_pred_rf_opt))
+mae_rf_opt  = mean_absolute_error(y_test, y_pred_rf_opt)
+r2_rf_opt   = r2_score(y_test, y_pred_rf_opt)
 
-print(f"\n Meilleurs paramètres RF :")
+print(f"\nMeilleurs paramètres RF :")
 for k, v in grid_search_rf.best_params_.items():
     print(f"   {k}: {v}")
-print(f"\n Performances RF optimisé :")
+print(f"\nPerformances RF optimisé :")
 print(f"   RMSE : {rmse_rf_opt:>12,.0f}")
 print(f"   MAE  : {mae_rf_opt:>12,.0f}")
 print(f"   R²   : {r2_rf_opt:>12.4f}")
 
+
 # CELLULE 12 — Optimisation XGBoost
 
-print("  Optimisation par GridSearch — XGBoost")
-print("   (peut prendre 1-2 minutes...)\n")
+from xgboost import XGBRegressor
+from sklearn.model_selection import RandomizedSearchCV
+
+print("Optimisation XGBoost")
 
 param_grid_xgb = {
-    'n_estimators'  : [100, 200, 300],
-    'max_depth'     : [3, 5, 7],
-    'learning_rate' : [0.01, 0.05, 0.1, 0.2],
-    'subsample'     : [0.8, 1.0],
+    'n_estimators': [50, 100],
+    'max_depth': [3, 5],
+    'learning_rate': [0.05, 0.1],
+    'subsample': [0.8, 1.0],
     'colsample_bytree': [0.8, 1.0]
 }
 
@@ -378,11 +374,11 @@ xgb_base = XGBRegressor(random_state=42, verbosity=0)
 grid_search_xgb = RandomizedSearchCV(
     xgb_base,
     param_distributions=param_grid_xgb,
-    n_iter=20,
-    cv=5,
+    n_iter=10,
+    cv=3,
     scoring='neg_root_mean_squared_error',
     random_state=42,
-    n_jobs=-1,
+    n_jobs=1,
     verbose=1
 )
 
@@ -390,17 +386,15 @@ grid_search_xgb.fit(X_train, y_train)
 
 best_xgb = grid_search_xgb.best_estimator_
 y_pred_xgb_opt = best_xgb.predict(X_test)
-rmse_xgb_opt   = np.sqrt(mean_squared_error(y_test, y_pred_xgb_opt))
-mae_xgb_opt    = mean_absolute_error(y_test, y_pred_xgb_opt)
-r2_xgb_opt     = r2_score(y_test, y_pred_xgb_opt)
+rmse_xgb_opt = np.sqrt(mean_squared_error(y_test, y_pred_xgb_opt))
+mae_xgb_opt = mean_absolute_error(y_test, y_pred_xgb_opt)
+r2_xgb_opt = r2_score(y_test, y_pred_xgb_opt)
 
-print(f"\n Meilleurs paramètres XGBoost :")
 for k, v in grid_search_xgb.best_params_.items():
-    print(f"   {k}: {v}")
-print(f"\n Performances XGBoost optimisé :")
-print(f"   RMSE : {rmse_xgb_opt:>12,.0f}")
-print(f"   MAE  : {mae_xgb_opt:>12,.0f}")
-print(f"   R²   : {r2_xgb_opt:>12.4f}")
+    print(f"{k}: {v}")
+print(f"RMSE : {rmse_xgb_opt:,.0f}")
+print(f"MAE  : {mae_xgb_opt:,.0f}")
+print(f"R2   : {r2_xgb_opt:.4f}")
 
 
 # CELLULE 13 — Tableau comparatif final & sélection
@@ -445,6 +439,7 @@ else:
 
 print(f"\n Modèle sélectionné pour le registry : {BEST_MODEL_NAME}")
 
+
 # CELLULE 14 — Feature Importance
 
 if hasattr(BEST_MODEL, 'feature_importances_'):
@@ -472,7 +467,7 @@ import json
 print(" Sauvegarde dans le Snowflake Model Registry...")
 
 # Initialiser le registry
-reg = Registry(session=session, database_name="HOUSE_PRICE_DB", schema_name="ML_SCHEMA")
+reg = Registry(session=session, database_name="HOUSES_PRICES_DB", schema_name="ML_SCHEMA")
 
 # Métriques à logguer
 metrics = {
@@ -541,12 +536,11 @@ print(new_houses[['AREA', 'BEDROOMS', 'BATHROOMS', 'AIRCONDITIONING',
 # Sauvegarder dans Snowflake
 new_houses_snow = session.create_dataframe(new_houses)
 new_houses_snow.write.save_as_table(
-    "HOUSE_PRICE_DB.ML_SCHEMA.INFERENCE_RESULTS",
+    "HOUSES_PRICES_DB.ML_SCHEMA.INFERENCE_RESULTS",
     mode="overwrite"
 )
 
 print(f"\n {len(new_houses)} prédictions sauvegardées dans INFERENCE_RESULTS")
-
 
 # CELLULE 18 — Vérification table d'inférence
 
