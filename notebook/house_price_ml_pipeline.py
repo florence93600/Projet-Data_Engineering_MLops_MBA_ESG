@@ -471,26 +471,27 @@ reg = Registry(session=session, database_name="HOUSES_PRICES_DB", schema_name="M
 
 # Métriques à logguer
 metrics = {
-    "rmse" : float(best_rmse),
-    "mae"  : float(best_mae),
-    "r2"   : float(best_r2)
+    "rmse": float(best_rmse),
+    "mae": float(best_mae),
+    "r2": float(best_r2)
 }
+
 
 # Enregistrement du modèle
 model_version = reg.log_model(
-    model         = BEST_MODEL,
-    model_name    = "HOUSE_PRICE_PREDICTOR",
-    version_name  = "V1",
-    comment       = f"Modèle {BEST_MODEL_NAME} — RMSE={best_rmse:,.0f}, R²={best_r2:.4f}",
-    metrics       = metrics,
-    sample_input_data = X_train[:5]   # exemple d'input pour la signature
+    model=BEST_MODEL,
+    model_name="HOUSE_PRICE_PREDICTOR",
+    comment=f"Modèle {BEST_MODEL_NAME} — RMSE={best_rmse:,.0f}, R²={best_r2:.4f}",
+    metrics=metrics,
+    sample_input_data=X_train[:5]
 )
 
 print(f"\n Modèle enregistré !")
 print(f"   Nom     : HOUSE_PRICE_PREDICTOR")
-print(f"   Version : V1")
+print(f"   Version : {model_version.version_name}")  # récupère la vraie version
 print(f"   RMSE    : {best_rmse:,.0f}")
 print(f"   R²      : {best_r2:.4f}")
+
 
 
 # CELLULE 16 — Vérification dans le registry
