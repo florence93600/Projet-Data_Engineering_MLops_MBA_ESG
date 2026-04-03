@@ -36,7 +36,7 @@ df_snow.show(5)
 df = df_snow.to_pandas()
 print("\n Conversion en Pandas OK")
 
-# CELLULE 3 — Exploration : infos générales
+# CELLULE 3 — Exploration : informations générales
 
 print("=" * 50)
 print(" INFORMATIONS GÉNÉRALES")
