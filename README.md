@@ -36,7 +36,7 @@ Le dataset contient **1 090 biens immobiliers** décrits par 13 variables :
 | `furnishingstatus` | État d'ameublement (meublé / semi-meublé / non meublé) |
 
 
-## 3.Analyse exploratoire — points clés
+## 3. Analyse exploratoire — points clés
 L'analyse du dataset révèle les éléments suivants:
 - **Prix minimum** : 87 500 € — **Prix maximum** : 665 000 €
 - **Prix médian** : 213 500 € — **Prix moyen** : 237 663 €
@@ -45,7 +45,7 @@ L'analyse du dataset révèle les éléments suivants:
 - Les variables les plus corrélées au prix sont la surface (0.55) et le nombre de salles de bain (0.53).
 
 
-## 4.Pipeline ML — étapes réalisées
+## 4. Pipeline ML — étapes réalisées
 
 ### a. Ingestion des données
 Chargement du dataset depuis S3 vers une table Snowflake `HOUSES_PRICES` via Snowpark, directement dans un Snowflake Notebook.
@@ -58,8 +58,12 @@ Chargement du dataset depuis S3 vers une table Snowflake `HOUSES_PRICES` via Sno
 ### c. Feature Engineering
 - Encodage binaire des variables yes/no (`mainroad`, `guestroom`, `basement`, `hotwaterheating`, `airconditioning`, `prefarea`) : yes → 1, no → 0
 - Encodage ordinal de `furnishingstatus` : meublé → 2, semi-meublé → 1, non meublé → 0
-- Split train/test : 80% / 20% avec `random_state=42`
-- Normalisation via `StandardScaler` appliquée sur la régression linéaire
+- **Split train/test : 80% / 20%** avec `random_state=42`
+Le dataset a été divisé en deux parties : 80% des maisons (872 lignes) servent à entraîner le modèle, et 20% (218 lignes) sont mises de côté pour tester ses performances sur des données qu'il n'a jamais vues. Le `random_state=42` fixe la répartition aléatoire pour garantir des résultats identiques à chaque exécution du code.
+
+**Normalisation via `StandardScaler`** appliquée sur la régression linéaire
+La normalisation consiste à ramener toutes les variables sur la même échelle. Sans ça, la surface (33 à 324 m²) et le nombre de chambres (1 à 6) n'auraient pas le même poids dans les calculs, ce qui fausserait le modèle. Le `StandardScaler` transforme chaque variable pour qu'elle ait une moyenne de 0 et un écart type de 1. 
+
 
 ### d. Entraînement de trois modèles
 Plutôt que de retenir un seul modèle par défaut, nous avons choisi d'en entraîner trois de natures différentes afin de comparer objectivement leurs performances 
@@ -72,18 +76,17 @@ et de sélectionner celui qui s'adapte le mieux à notre dataset, car aucun algo
 ### e. Évaluation des modèles
 Ce problème étant une régression et non une classification, nous utilisons RMSE, MAE et R² à la place d'Accuracy, Precision et Recall qui ne s'appliquent pas à la prédiction d'une valeur continue.
 
-- **RMSE** : erreur quadratique moyenne — mesure l'amplitude des erreurs 
-  en pénalisant les grosses erreurs
+- **RMSE** : erreur quadratique moyenne — mesure l'amplitude des erreurs en pénalisant les grosses erreurs
 - **MAE** : erreur absolue moyenne — mesure l'erreur moyenne sans pénalisation
-- **R²** : coefficient de détermination — mesure la part de variance expliquée 
-  par le modèle (0 à 1, plus c'est élevé mieux c'est)
+- **R²** : coefficient de détermination — mesure la part de variance expliquée par le modèle (0 à 1, plus c'est élevé mieux c'est)
 
 ### f. Optimisation des hyperparamètres
-Nous avons optimisé Random Forest et XGBoost via `RandomizedSearchCV` (10 itérations, 3 folds). La régression linéaire n'a pas été optimisée car elle dispose de très peu d'hyperparamètres ayant un impact significatif sur ses performances.
+Pour améliorer les performances de Random Forest et XGBoost, nous avons utilisé RandomizedSearchCV, une technique qui teste automatiquement différentes combinaisons de paramètres pour trouver la meilleure configuration possible.
+Concrètement, nous lui avons demandé de tester 10 combinaisons de paramètres différentes ("10 itérations"). Pour chaque combinaison testée, le modèle est évalué 3 fois sur des portions différentes des données d'entraînement ("3 folds") afin d'avoir un résultat fiable et non dépendant d'un seul découpage. Au total cela représente 30 entraînements par modèle. La meilleure combinaison est ensuite retenue automatiquement.
+La régression linéaire n'a pas été optimisée car elle dispose de très peu de paramètres ajustables ayant un impact réel sur ses performances — l'optimiser n'aurait pas apporté de gain significatif.
 
----
 
-## Résultats — Tableau comparatif final
+## 5. Résultats — Tableau comparatif final
 
 | Modèle | RMSE | MAE | R² |
 |---|---|---|---|
@@ -95,15 +98,12 @@ Nous avons optimisé Random Forest et XGBoost via `RandomizedSearchCV` (10 itér
 
 ### Meilleur modèle : XGBoost Base
 RMSE : 29 314 MAE : 18 497 R² : 0.9036
-XGBoost dans sa version de base est le modèle retenu. Sa version optimisée 
-s'est révélée légèrement moins performante, ce qui arrive lorsque la recherche 
-aléatoire ne tombe pas sur de meilleures combinaisons de paramètres que celles 
-par défaut. L'optimisation de Random Forest n'a quant à elle rien changé — 
+XGBoost dans sa version de base est le modèle retenu. Sa version optimisée s'est révélée légèrement moins performante, ce qui arrive lorsque la recherche 
+aléatoire ne tombe pas sur de meilleures combinaisons de paramètres que celles par défaut. L'optimisation de Random Forest n'a quant à elle rien changé — 
 les paramètres par défaut étaient déjà optimaux pour ce dataset.
 
----
 
-## Importance des features
+## 6. Importance des features
 
 | Feature | Importance |
 |---|---|
@@ -120,26 +120,17 @@ les paramètres par défaut étaient déjà optimaux pour ce dataset.
 | BEDROOMS | 0.040 |
 | MAINROAD | 0.033 |
 
-Le nombre de salles de bain est le critère le plus déterminant pour estimer 
-le prix d'un bien dans ce dataset, avec une importance presque quatre fois 
-supérieure à la deuxième variable (surface).
+Le nombre de salles de bain est le critère le plus déterminant pour estimer le prix d'un bien dans ce dataset, avec une importance presque quatre fois supérieure à la deuxième variable (surface).
 
----
 
-## Stockage dans le Model Registry
+## 7. Stockage dans le Model Registry
 
-Le modèle XGBoost Base a été enregistré dans le Snowflake Model Registry 
-sous le nom `HOUSE_PRICE_PREDICTOR` (version `ODD_TREEFROG_2`) avec ses 
-métriques attachées, ce qui permet à toute l'organisation de le recharger 
-et de l'utiliser sans réentraînement.
+Le modèle XGBoost Base a été enregistré dans le Snowflake Model Registry sous le nom `HOUSE_PRICE_PREDICTOR` (version `ODD_TREEFROG_2`) avec ses métriques attachées, ce qui permet à toute l'organisation de le recharger et de l'utiliser sans réentraînement.
 
----
 
-## Application Streamlit — CFM Immobilier
+## 8. Application Streamlit — CFM Immobilier
 
-Une application Streamlit a été déployée directement dans Snowflake pour 
-permettre aux équipes métier d'interagir avec le modèle sans connaissance 
-technique.
+Une application Streamlit a été déployée directement dans Snowflake pour permettre aux équipes métier d'interagir avec le modèle sans connaissance technique.
 
 L'application permet de :
 - Saisir les caractéristiques d'un bien via une interface intuitive
