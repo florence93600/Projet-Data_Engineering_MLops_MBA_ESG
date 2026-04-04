@@ -125,7 +125,8 @@ Le nombre de salles de bain est le critère le plus déterminant pour estimer le
 
 ## 7. Stockage dans le Model Registry
 
-Le modèle XGBoost Base a été enregistré dans le Snowflake Model Registry sous le nom `HOUSE_PRICE_PREDICTOR` (version `ODD_TREEFROG_2`) avec ses métriques attachées, ce qui permet à toute l'organisation de le recharger et de l'utiliser sans réentraînement.
+Le modèle XGBoost Base a été enregistré dans le Snowflake Model Registry sous le nom `HOUSE_PRICE_PREDICTOR` (version `V1`) avec ses métriques attachées, ce qui permet à toute l'organisation de le recharger et de l'utiliser sans réentraînement.
+(ou exécuter la commande suivante dans SQL: "SHOW VERSIONS IN MODEL HOUSES_PRICES_DB.ML_SCHEMA.HOUSE_PRICE_PREDICTOR;")
 
 
 ## 8. Application Streamlit — CFM Immobilier
