@@ -1,16 +1,19 @@
 ## Équipe
 
--**Carole ADEPOH N’GUESSAN**
--**Florence Liliane MATIP**
--**Grâce Marie-Paule LASM**
+## <span style="color:#D85A30">Membres de l'équipe</span>
+
+- **Carole ADEPOH N'GUESSAN**
+- **Florence Liliane MATIP**
+- **Grâce Marie-Paule LASM**
+
+
 
 ## 1. Contexte du projet
 
 Nous sommes une agence immobilière **CFM Immobilier**, qui souhaite exploiter ses données analytiques pour automatiser l'estimation des prix de biens immobiliers.
 En tant qu'équipe Data Engineering & Data Science, nous avons conçu et déployé un pipeline ML complet directement dans l'environnement Snowflake, sans déplacer les données vers un système externe.
 
-L'objectif est de fournir aux équipes métier un outil fiable, accessible et interactif 
-pour estimer la valeur d'un bien en temps réel, à partir de ses caractéristiques.
+L'objectif est de fournir aux équipes métier un outil fiable, accessible et interactif pour estimer la valeur d'un bien en temps réel, à partir de ses caractéristiques.
 
 
 ## 2. Dataset
