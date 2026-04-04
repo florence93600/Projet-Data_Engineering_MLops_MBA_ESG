@@ -37,22 +37,18 @@ Le dataset contient **1 090 biens immobiliers** décrits par 13 variables :
 
 
 ## 3.Analyse exploratoire — points clés
-L'analyse des données révèle les éléments suivants:
+L'analyse du dataset révèle les éléments suivants:
 - **Prix minimum** : 87 500 € — **Prix maximum** : 665 000 €
 - **Prix médian** : 213 500 € — **Prix moyen** : 237 663 €
-- La moyenne est supérieure à la médiane, ce qui indique la présence de biens 
-  haut de gamme qui tirent les chiffres vers le haut.
+- La moyenne est supérieure à la médiane, ce qui indique la présence de biens  haut de gamme qui tirent les chiffres vers le haut.
 - **Aucune valeur manquante** dans le dataset.
-- Les variables les plus corrélées au prix sont la surface (0.55) 
-  et le nombre de salles de bain (0.53).
+- Les variables les plus corrélées au prix sont la surface (0.55) et le nombre de salles de bain (0.53).
 
----
 
-## Pipeline ML — étapes réalisées
+## 4.Pipeline ML — étapes réalisées
 
 ### 1. Ingestion des données
-Chargement du dataset depuis S3 vers une table Snowflake `HOUSES_PRICES` 
-via Snowpark, directement dans un Snowflake Notebook.
+Chargement du dataset depuis S3 vers une table Snowflake `HOUSES_PRICES` via Snowpark, directement dans un Snowflake Notebook.
 
 ### 2. Exploration et visualisation
 - Distribution du prix de vente (histogramme + boxplot)
