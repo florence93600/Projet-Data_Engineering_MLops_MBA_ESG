@@ -36,9 +36,8 @@ Le dataset contient **1 090 biens immobiliers** décrits par 13 variables :
 | `furnishingstatus` | État d'ameublement (meublé / semi-meublé / non meublé) |
 
 
-
-## Analyse exploratoire — points clés
-
+## 3.Analyse exploratoire — points clés
+L'analyse des données révèle les éléments suivants:
 - **Prix minimum** : 87 500 € — **Prix maximum** : 665 000 €
 - **Prix médian** : 213 500 € — **Prix moyen** : 237 663 €
 - La moyenne est supérieure à la médiane, ce qui indique la présence de biens 
