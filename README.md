@@ -1,11 +1,8 @@
-## Équipe
-
-## <span style="color:#D85A30">Membres de l'équipe</span>
+## <span style="color:#D85A30">Equipe</span>
 
 - **Carole ADEPOH N'GUESSAN**
 - **Florence Liliane MATIP**
 - **Grâce Marie-Paule LASM**
-
 
 
 ## 1. Contexte du projet
