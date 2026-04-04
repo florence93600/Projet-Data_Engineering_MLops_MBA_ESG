@@ -35,7 +35,7 @@ Le dataset contient **1 090 biens immobiliers** décrits par 13 variables :
 | `prefarea` | Localisation en zone privilégiée (oui/non) |
 | `furnishingstatus` | État d'ameublement (meublé / semi-meublé / non meublé) |
 
----
+
 
 ## Analyse exploratoire — points clés
 
