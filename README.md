@@ -1,8 +1,8 @@
 ## Équipe
 
-Carole ADEPOH N’GUESSAN
-Florence Liliane MATIP
-Grâce Marie-Paule LASM
+-**Carole ADEPOH N’GUESSAN**
+-**Florence Liliane MATIP**
+-**Grâce Marie-Paule LASM**
 
 ## 1. Contexte du projet
 
