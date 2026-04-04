@@ -6,7 +6,6 @@
 
 
 ## 1. Contexte du projet
-
 Nous sommes une agence immobilière **CFM Immobilier**, qui souhaite exploiter ses données analytiques pour automatiser l'estimation des prix de biens immobiliers.
 En tant qu'équipe Data Engineering & Data Science, nous avons conçu et déployé un pipeline ML complet directement dans l'environnement Snowflake, sans déplacer les données vers un système externe.
 
