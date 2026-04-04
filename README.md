@@ -47,36 +47,30 @@ L'analyse du dataset révèle les éléments suivants:
 
 ## 4.Pipeline ML — étapes réalisées
 
-### 1. Ingestion des données
+### a. Ingestion des données
 Chargement du dataset depuis S3 vers une table Snowflake `HOUSES_PRICES` via Snowpark, directement dans un Snowflake Notebook.
 
-### 2. Exploration et visualisation
+### b. Exploration et visualisation
 - Distribution du prix de vente (histogramme + boxplot)
 - Matrice de corrélation entre les variables numériques
 - Impact des variables catégorielles sur le prix (boxplots groupés)
 
-### 3. Feature Engineering
-- Encodage binaire des variables yes/no (`mainroad`, `guestroom`, `basement`, 
-  `hotwaterheating`, `airconditioning`, `prefarea`) : yes → 1, no → 0
-- Encodage ordinal de `furnishingstatus` : meublé → 2, semi-meublé → 1, 
-  non meublé → 0
+### c. Feature Engineering
+- Encodage binaire des variables yes/no (`mainroad`, `guestroom`, `basement`, `hotwaterheating`, `airconditioning`, `prefarea`) : yes → 1, no → 0
+- Encodage ordinal de `furnishingstatus` : meublé → 2, semi-meublé → 1, non meublé → 0
 - Split train/test : 80% / 20% avec `random_state=42`
 - Normalisation via `StandardScaler` appliquée sur la régression linéaire
 
-### 4. Entraînement de trois modèles
-Plutôt que de retenir un seul modèle par défaut, nous avons choisi d'en entraîner 
-trois de natures différentes afin de comparer objectivement leurs performances 
-et de sélectionner celui qui s'adapte le mieux à notre dataset, car aucun algorithme 
-n'est universellement supérieur.
+### d. Entraînement de trois modèles
+Plutôt que de retenir un seul modèle par défaut, nous avons choisi d'en entraîner trois de natures différentes afin de comparer objectivement leurs performances 
+et de sélectionner celui qui s'adapte le mieux à notre dataset, car aucun algorithme n'est universellement supérieur.
 
 - **Linear Regression** — modèle de référence, simple et interprétable
 - **Random Forest** — ensemble d'arbres de décision, robuste aux non-linéarités
 - **XGBoost** — boosting par gradient, performant sur les données tabulaires
 
-### 5. Évaluation des modèles
-Ce problème étant une régression et non une classification, nous utilisons RMSE, 
-MAE et R² à la place d'Accuracy, Precision et Recall qui ne s'appliquent 
-pas à la prédiction d'une valeur continue.
+### e. Évaluation des modèles
+Ce problème étant une régression et non une classification, nous utilisons RMSE, MAE et R² à la place d'Accuracy, Precision et Recall qui ne s'appliquent pas à la prédiction d'une valeur continue.
 
 - **RMSE** : erreur quadratique moyenne — mesure l'amplitude des erreurs 
   en pénalisant les grosses erreurs
@@ -84,11 +78,8 @@ pas à la prédiction d'une valeur continue.
 - **R²** : coefficient de détermination — mesure la part de variance expliquée 
   par le modèle (0 à 1, plus c'est élevé mieux c'est)
 
-### 6. Optimisation des hyperparamètres
-Nous avons optimisé Random Forest et XGBoost via `RandomizedSearchCV` 
-(10 itérations, 3 folds). La régression linéaire n'a pas été optimisée 
-car elle dispose de très peu d'hyperparamètres ayant un impact significatif 
-sur ses performances.
+### f. Optimisation des hyperparamètres
+Nous avons optimisé Random Forest et XGBoost via `RandomizedSearchCV` (10 itérations, 3 folds). La régression linéaire n'a pas été optimisée car elle dispose de très peu d'hyperparamètres ayant un impact significatif sur ses performances.
 
 ---
 
@@ -186,13 +177,8 @@ Projet-Data_Engineering_MLops_MBA_ESG/
 └── data/
     └── .gitkeep
 
----
 
-## Équipe
 
-Projet réalisé dans le cadre du Workshop Data Engineering & Machine Learning 
-avec Snowflake — MBA ESG.
 
-Livrable : `MBAESG_[PROMOTION]_[CLASSE]_EVALUATION_DATAENGINEER_MLOPS`
 
 
