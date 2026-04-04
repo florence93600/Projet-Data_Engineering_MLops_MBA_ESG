@@ -157,6 +157,7 @@ Le modèle est fiable dans la plage d'entraînement : **33 à 324 m²**. Toute v
 
 ## 10. Structure du dépôt
 
+```
 Projet-Data_Engineering_MLops_MBA_ESG/
 │
 ├── README.md
@@ -167,6 +168,8 @@ Projet-Data_Engineering_MLops_MBA_ESG/
 │   └── streamlit_app.py
 └── data/
     └── .gitkeep
+```
+
 
 
 
