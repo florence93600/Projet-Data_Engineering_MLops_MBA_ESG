@@ -161,6 +161,7 @@ Projet-Data_Engineering_MLops_MBA_ESG/
 │
 ├── README.md
 ├── .gitignore
+├── Interface Streamlit CFM Immobilier (visualisation du rendu de l'application Streamlit)
 ├── notebook/
 │   └── house_price_ml_pipeline.py
 ├── app/
